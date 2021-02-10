@@ -1,0 +1,11 @@
+commit 40201b1e35a74befaf2db0369eee6a971a112d41
+Author: Sergei <kolesniksn123@mail.ru>
+Date:   Wed Feb 10 20:05:35 2021 +0300
+
+    add status.txt
+
+commit 4bd6061118b8de20ff75b0107cdfd4a554373086
+Author: Sergei <kolesniksn123@mail.ru>
+Date:   Wed Feb 10 20:03:50 2021 +0300
+
+    add .gitingore
