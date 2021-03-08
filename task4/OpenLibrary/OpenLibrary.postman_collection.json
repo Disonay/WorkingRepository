@@ -1,0 +1,91 @@
+{
+	"info": {
+		"_postman_id": "6c7b500e-5a20-49f1-93af-90ba713a6256",
+		"name": "OpenLibrary",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "get1",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://openlibrary.org/search.json?author=Dostoevsky",
+					"protocol": "http",
+					"host": [
+						"openlibrary",
+						"org"
+					],
+					"path": [
+						"search.json"
+					],
+					"query": [
+						{
+							"key": "author",
+							"value": "Dostoevsky"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get2",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://openlibrary.org/api/books/?bibkeys=OL25211376M,OL7046317M&format=json",
+					"protocol": "http",
+					"host": [
+						"openlibrary",
+						"org"
+					],
+					"path": [
+						"api",
+						"books",
+						""
+					],
+					"query": [
+						{
+							"key": "bibkeys",
+							"value": "OL25211376M,OL7046317M"
+						},
+						{
+							"key": "format",
+							"value": "json"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get3",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://openlibrary.org/subjects/love.json?details=true",
+					"protocol": "http",
+					"host": [
+						"openlibrary",
+						"org"
+					],
+					"path": [
+						"subjects",
+						"love.json"
+					],
+					"query": [
+						{
+							"key": "details",
+							"value": "true"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

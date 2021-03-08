@@ -1,0 +1,4 @@
+search by bookID
+bibkeys - list of id
+format - output data format
+return information about found ID

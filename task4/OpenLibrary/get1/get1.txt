@@ -1,0 +1,2 @@
+search by key word or author, title and etc
+Returns found books and all available information about them 
