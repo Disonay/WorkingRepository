@@ -1,0 +1,5 @@
+search by domains
+domain - Domain includes
+country - hosting country
+isDead - dead or not
+return domains information

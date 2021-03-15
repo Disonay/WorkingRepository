@@ -1,0 +1,113 @@
+{
+	"info": {
+		"_postman_id": "732572e6-45b4-46ae-bfb7-f9887b418454",
+		"name": "domainsAPI",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "get1",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://api.domainsdb.info/v1/domains/search?domain=bsu&isDead=true&country=RU",
+					"protocol": "https",
+					"host": [
+						"api",
+						"domainsdb",
+						"info"
+					],
+					"path": [
+						"v1",
+						"domains",
+						"search"
+					],
+					"query": [
+						{
+							"key": "domain",
+							"value": "bsu"
+						},
+						{
+							"key": "isDead",
+							"value": "true"
+						},
+						{
+							"key": "country",
+							"value": "RU"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get2",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://api.domainsdb.info/v1/domains/search?domain=sony&isDead=false",
+					"protocol": "https",
+					"host": [
+						"api",
+						"domainsdb",
+						"info"
+					],
+					"path": [
+						"v1",
+						"domains",
+						"search"
+					],
+					"query": [
+						{
+							"key": "domain",
+							"value": "sony"
+						},
+						{
+							"key": "isDead",
+							"value": "false"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get3",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://api.domainsdb.info/v1/domains/search?domain=fpmi&isDead=false&country=RU",
+					"protocol": "https",
+					"host": [
+						"api",
+						"domainsdb",
+						"info"
+					],
+					"path": [
+						"v1",
+						"domains",
+						"search"
+					],
+					"query": [
+						{
+							"key": "domain",
+							"value": "fpmi"
+						},
+						{
+							"key": "isDead",
+							"value": "false"
+						},
+						{
+							"key": "country",
+							"value": "RU"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

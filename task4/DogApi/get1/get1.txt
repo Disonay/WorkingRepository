@@ -1,0 +1,1 @@
+display multiple random image from all dogs collection
