@@ -376,16 +376,20 @@
         if (typeof id !== "string") {
             return false;
         }
-        let edit = getAd(id);
+        let clone = Object.assign({}, getAd(id));
         for (let field in adItem) {
             if (field !== "id" && field !== "createdAt") {
-                edit[field] = adItem[field];
+                clone[field] = adItem[field];
             }
             else {
                 return false;
             }
         }
-        if (validateAd(edit)) {
+        if (validateAd(clone)) {
+            let edit = getAd(id);
+            for (let field in edit) {
+                edit[field] = clone[field];
+            }
             return true;
         }
         return false;
