@@ -287,11 +287,7 @@
         return filterAds;
     }
     function getAd(id) {
-        let index = 0;
-        while (index < adList.length && adList[index].id != id) {
-            index++;
-        }
-        return adList[index];
+        return adList.find(ad => ad.id == id);
     }
 
     function validateAd(adItem) {
