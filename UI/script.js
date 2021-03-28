@@ -300,27 +300,27 @@
         for (let field in adItem) {
             switch (field) {
                 case "id":
-                    if (typeof adItem.id !== "string" && adItem.id.length == 0) {
+                    if (typeof adItem.id !== "string" && !adItem.id.length) {
                         return false;
                     }
                     break;
                 case "description":
-                    if (typeof adItem.description !== "string" || adItem.description.length >= 200 || adItem.description.length == 0) {
+                    if (typeof adItem.description !== "string" || adItem.description.length >= 200 || !adItem.description.length) {
                         return false;
                     }
                     break;
                 case "createdAt":
-                    if (Object.prototype.toString.call(adItem.createdAt) !== "[object Date]") {
+                    if (!(adItem.createdAt instanceof Date)) {
                         return false;
                     }
                     break;
                 case "link":
-                    if (typeof adItem.link !== "string" || adItem.link.length == 0) {
+                    if (typeof adItem.link !== "string" || !adItem.link.length) {
                         return false;
                     }
                     break;
                 case "vendor":
-                    if (typeof adItem.vendor !== "string" && adItem.vendor.length == 0) {
+                    if (typeof adItem.vendor !== "string" && !adItem.vendor.length) {
                         return false;
                     }
                     break;
@@ -330,7 +330,7 @@
                     }
                     break;
                 case "hashTags":
-                    if (Array.isArray(adItem.hashTags) && adItem.hashTags.length > 0){
+                    if (Array.isArray(adItem.hashTags) && adItem.hashTags.length){
                         if (!adItem.hashTags.every(hashtag => typeof hashtag == "string")){
                             return false;
                         }
@@ -345,7 +345,7 @@
                     }
                     break;
                 case "validUntil":
-                    if (Object.prototype.toString.call(adItem.validUntil) !== "[object Date]") {
+                    if (!(adItem.validUntil instanceof Date)) {
                         return false;
                     }
                     break;
@@ -355,7 +355,7 @@
                     }
                     break;
                 case "reviews":
-                    if (Object.prototype.toString.call(adItem.reviews) !== "[object Array]") {
+                    if (!Array.isArray(adItem.reviews)) {
                         return false;
                     }
                     break;
