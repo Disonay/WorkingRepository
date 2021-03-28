@@ -272,14 +272,14 @@
         filterAds.sort(function compareDate(Ad1, Ad2) {
             return Ad1.createdAt - Ad2.createdAt;
          })
-        if (filterConfig !== undefined) {
-            if (filterConfig.vendor !== undefined && filterConfig.date == undefined) {
+        if (filterConfig) {
+            if (filterConfig.vendor && !filterConfig.date) {
                filterAds = filterAds.filter(ad => ad.vendor == filterConfig.vendor);
             }
-            if (filterConfig.vendor !== undefined && filterConfig.date !== undefined) {
+            if (filterConfig.vendor && filterConfig.date) {
                 filterAds = filterAds.filter(ad => ad.vendor == filterConfig.vendor, ad => ad.createdAt == filterConfig.date );
              }
-             if (filterConfig.vendor == undefined && filterConfig.date !== undefined) {
+             if (!filterConfig.vendor && filterConfig.date) {
                 filterAds = filterAds.filter(ad => ad.createdAt == filterConfig.date);
              }
         }
