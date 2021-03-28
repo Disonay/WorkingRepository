@@ -395,11 +395,8 @@
         return false;
     }
     function removeAd(id) {
-        let index = 0;
-        while (index < adList.length && adList[index].id !== id) {
-            index++;
-        }
-        if (index !== adList.length) {
+        let index = adList.findIndex(ad => ad.id == id);
+        if (index >= 0) {
             adList.splice(index, 1);
             return true;
         }
