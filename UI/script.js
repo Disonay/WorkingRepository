@@ -1,5 +1,182 @@
 (function() {
-    var adList = [
+    class adModel {
+        #adList;
+        constructor(adList) {
+            this.#adList = new Array();
+            this.addAll(adList);
+        }
+        #addAllValidation(ad) {
+            return this.add(ad);
+        }
+        addAll(adList) {
+            if (!Array.isArray(adList)) {
+                return adList;
+            }
+            let wrongAds = []
+            adList.forEach(ad => this.#addAllValidation(ad) ? true : wrongAds.push(ad));
+            return wrongAds;
+        }
+        clear() {
+            this.#adList = [];
+        }
+        #filterTags(ad, filterTags) {
+            if (ad.hashTags.length > filterTags.length) {
+                let includeTags = filterTags.filter(fTags => ad.hashTags.includes(fTags));
+                return filterTags.every(ftag => includeTags.find(tag => ftag === tag));
+            }
+            else {
+                return ad.hashTags.every(tag => filterTags.find(ftag => ftag === tag));
+            }
+        }
+        getPage(skip = 0, top = 10, filterConfig = undefined) {
+            if (typeof skip !== "number" || typeof top !== "number" ) {
+                console.log("Skip or top are not numbers!");
+                return;
+            }
+            let filterAds = this.#adList;
+            filterAds.sort(function compareDate(Ad1, Ad2) {
+                return Ad1.createdAt - Ad2.createdAt;
+             })
+            if (filterConfig) {
+                if (filterConfig.vendor) {
+                   filterAds = filterAds.filter(ad => ad.vendor == filterConfig.vendor);
+                }
+                if (filterConfig.date) {
+                    filterAds = filterAds.filter(ad => ad.createdAt == filterConfig.date );
+                }
+                 if (filterConfig.tags) {
+                    if (Array.isArray(filterConfig.tags)) {
+                        filterAds = filterAds.filter(ad => ad.hashTags.length >= filterConfig.tags.length);
+                        
+                        filterAds = filterAds.filter(ad => this.#filterTags(ad, filterConfig.tags));
+                    }
+                 }
+            }
+            filterAds = filterAds.slice(skip, top);
+            return filterAds;
+        }
+
+        get(id) {
+            return this.#adList.find(ad => ad.id == id);
+        }
+
+        static validateAd(adItem) {
+            let requiredFileds = ["id", "description", "link", "createdAt", "vendor", "hashTags", "discount", "validUntil"];
+        for (let i = 0; i < requiredFileds.length; i++) {
+            if (adItem[requiredFileds[i]] == undefined) {
+                return false;
+            }
+        }
+        for (let field in adItem) {
+            switch (field) {
+                case "id":
+                    if (typeof adItem.id !== "string" && !adItem.id.length) {
+                        return false;
+                    }
+                    break;
+                case "description":
+                    if (typeof adItem.description !== "string" || adItem.description.length >= 200 || !adItem.description.length) {
+                        return false;
+                    }
+                    break;
+                case "createdAt":
+                    if (!(adItem.createdAt instanceof Date)) {
+                        return false;
+                    }
+                    break;
+                case "link":
+                    if (typeof adItem.link !== "string" || !adItem.link.length) {
+                        return false;
+                    }
+                    break;
+                case "vendor":
+                    if (typeof adItem.vendor !== "string" && !adItem.vendor.length) {
+                        return false;
+                    }
+                    break;
+                case "photoLink":
+                    if (typeof adItem.photoLink !== "string") {
+                        return false;
+                    }
+                    break;
+                case "hashTags":
+                    if (Array.isArray(adItem.hashTags) && adItem.hashTags.length){
+                        if (!adItem.hashTags.every(hashtag => typeof hashtag == "string")){
+                            return false;
+                        }
+                    }
+                    else {
+                        return false;
+                    }
+                    break;
+                case "discount":
+                    if (typeof adItem.discount !== "string" && adItem.description.length == 0) {
+                        return false;
+                    }
+                    break;
+                case "validUntil":
+                    if (!(adItem.validUntil instanceof Date)) {
+                        return false;
+                    }
+                    break;
+                case "rating":
+                    if (!(typeof adItem.rating == null || typeof adItem.rating == "number")){
+                        return false;
+                    }
+                    break;
+                case "reviews":
+                    if (!Array.isArray(adItem.reviews)) {
+                        return false;
+                    }
+                    break;
+                default:
+                    return false;
+                }
+            }
+            return true;
+            }
+
+        add(adItem) {
+            if (adModel.validateAd(adItem)) {
+                this.#adList.push(adItem);
+                return true;
+            }
+            return false;
+        }
+
+        edit(id, adItem) {
+            if (typeof id !== "string") {
+                return false;
+            }
+            let clone = Object.assign({}, this.get(id));
+            for (let field in adItem) {
+                if (field !== "id" && field !== "createdAt") {
+                    clone[field] = adItem[field];
+                }
+                else {
+                    return false;
+                }
+            }
+            if (adModel.validateAd(clone)) {
+                let edit = this.get(id);
+                for (let field in edit) {
+                    edit[field] = clone[field];
+                }
+                return true;
+            }
+            return false;
+        }
+
+        remove(id) {
+            let index = this.#adList.findIndex(ad => ad.id == id);
+        if (index >= 0) {
+            this.#adList.splice(index, 1);
+            return true;
+        }
+        return false;
+        }
+    }
+    var adCollection = new adModel([
         {
             id: "1",
             description: "Скидка на курсы немецкого языка",
@@ -261,156 +438,21 @@
             reviews: ["The best courses you can find", "Nice!"],
         },
 
-    ]
-
-    function getAds(skip = 0, top = 10, filterConfig = undefined) {
-        if (typeof skip !== "number" || typeof top !== "number" ) {
-            console.log("Skip or top are not numbers!");
-            return;
-        }
-        let filterAds = adList;
-        filterAds.sort(function compareDate(Ad1, Ad2) {
-            return Ad1.createdAt - Ad2.createdAt;
-         })
-        if (filterConfig) {
-            if (filterConfig.vendor && !filterConfig.date) {
-               filterAds = filterAds.filter(ad => ad.vendor == filterConfig.vendor);
-            }
-            if (filterConfig.vendor && filterConfig.date) {
-                filterAds = filterAds.filter(ad => ad.vendor == filterConfig.vendor, ad => ad.createdAt == filterConfig.date );
-             }
-             if (!filterConfig.vendor && filterConfig.date) {
-                filterAds = filterAds.filter(ad => ad.createdAt == filterConfig.date);
-             }
-        }
-        filterAds = filterAds.slice(skip, top);
-        return filterAds;
-    }
-    function getAd(id) {
-        return adList.find(ad => ad.id == id);
-    }
-
-    function validateAd(adItem) {
-        let requiredFileds = ["id", "description", "link", "createdAt", "vendor", "hashTags", "discount", "validUntil"];
-        for (let i = 0; i < requiredFileds.length; i++) {
-            if (adItem[requiredFileds[i]] == undefined) {
-                return false;
-            }
-        }
-        for (let field in adItem) {
-            switch (field) {
-                case "id":
-                    if (typeof adItem.id !== "string" && !adItem.id.length) {
-                        return false;
-                    }
-                    break;
-                case "description":
-                    if (typeof adItem.description !== "string" || adItem.description.length >= 200 || !adItem.description.length) {
-                        return false;
-                    }
-                    break;
-                case "createdAt":
-                    if (!(adItem.createdAt instanceof Date)) {
-                        return false;
-                    }
-                    break;
-                case "link":
-                    if (typeof adItem.link !== "string" || !adItem.link.length) {
-                        return false;
-                    }
-                    break;
-                case "vendor":
-                    if (typeof adItem.vendor !== "string" && !adItem.vendor.length) {
-                        return false;
-                    }
-                    break;
-                case "photoLink":
-                    if (typeof adItem.photoLink !== "string") {
-                        return false;
-                    }
-                    break;
-                case "hashTags":
-                    if (Array.isArray(adItem.hashTags) && adItem.hashTags.length){
-                        if (!adItem.hashTags.every(hashtag => typeof hashtag == "string")){
-                            return false;
-                        }
-                    }
-                    else {
-                        return false;
-                    }
-                    break;
-                case "discount":
-                    if (typeof adItem.discount !== "string" && adItem.description.length == 0) {
-                        return false;
-                    }
-                    break;
-                case "validUntil":
-                    if (!(adItem.validUntil instanceof Date)) {
-                        return false;
-                    }
-                    break;
-                case "rating":
-                    if (!(typeof adItem.rating == null || typeof adItem.rating == "number")){
-                        return false;
-                    }
-                    break;
-                case "reviews":
-                    if (!Array.isArray(adItem.reviews)) {
-                        return false;
-                    }
-                    break;
-                default:
-                    return false;
-                }
-            }
-            return true;
-        }
-    function addAd(adItem) {
-        if (validateAd(adItem)) {
-            adList.push(adItem);
-            return true;
-        }
-        return false;
-    }
-    function editAd(id, adItem) {
-        if (typeof id !== "string") {
-            return false;
-        }
-        let clone = Object.assign({}, getAd(id));
-        for (let field in adItem) {
-            if (field !== "id" && field !== "createdAt") {
-                clone[field] = adItem[field];
-            }
-            else {
-                return false;
-            }
-        }
-        if (validateAd(clone)) {
-            let edit = getAd(id);
-            for (let field in edit) {
-                edit[field] = clone[field];
-            }
-            return true;
-        }
-        return false;
-    }
-    function removeAd(id) {
-        let index = adList.findIndex(ad => ad.id == id);
-        if (index >= 0) {
-            adList.splice(index, 1);
-            return true;
-        }
-        return false;
-    }
-    console.log(getAds());
-    console.log(getAds(0, 20));
-    console.log(getAds(5, 15));
-    console.log(getAds(0, 20, {vendor: 'corpShop'}));
-    console.log(getAds(0, 20, {vendor: 'Japan Teacher', date:  new Date("2021-03-22T00:00:00")}));
-    console.log(getAd("1"));
-    console.log(getAd("100"));
-    console.log(getAd("first"));
-    console.log(validateAd({
+    ])
+    console.log(adCollection.getPage());
+    console.log(adCollection.getPage(0, 20));
+    console.log(adCollection.getPage(5, 15));
+    console.log(adCollection.getPage(0, 20, {vendor: 'corpShop'}));
+    console.log(adCollection.getPage(0, 20, {tags: ['forIT']}));
+    console.log(adCollection.getPage(0, 20, {tags: ['books']}));
+    console.log(adCollection.getPage(0, 20, {tags: ['forIT', 'spain']}));
+    console.log(adCollection.getPage(0, 20, {tags: ['forIT', 'course']}));
+    console.log(adCollection.getPage(0, 20, {tags: ['forIT', 'course', 'spain']}));
+    console.log(adCollection.getPage(0, 20, {vendor: 'Japan Teacher', date:  new Date("2021-03-22T00:00:00")}));
+    console.log(adCollection.get("1"));
+    console.log(adCollection.get("100"));
+    console.log(adCollection.get("first"));
+    console.log(adModel.validateAd({
         id: "1",
         description: "Скидка на курсы английского языка",
         createdAt: new Date("2021-03-02T00:00:00"),
@@ -423,7 +465,7 @@
         rating: 5, 
         reviews: ["The best courses you can find", "Nice!"],
     }));
-    console.log(validateAd({
+    console.log(adModel.validateAd({
         id: "1",
         createdAt: new Date("2021-03-02T00:00:00"),
         link: "englishcourse2021.by",
@@ -434,7 +476,7 @@
         rating: 5, 
         reviews: ["The best courses you can find", "Nice!"],
     }));
-    console.log(validateAd({
+    console.log(adModel.validateAd({
         id: "1",
         description: "Скидка на курсы английского языка",
         createdAt: "today",
@@ -447,7 +489,7 @@
         rating: 5, 
         reviews: ["The best courses you can find", "Nice!"],
     }));
-    console.log(validateAd({
+    console.log(adModel.validateAd({
         id: "1",
         description: "Скидка на курсы английского языка",
         createdAt: "today",
@@ -460,7 +502,7 @@
         rating: "5", 
         reviews: ["The best courses you can find", "Nice!"],
     }));
-    console.log(validateAd({
+    console.log(adModel.validateAd({
         id: "1",
         description: "Скидка на курсы английского языка",
         createdAt: "today",
@@ -473,7 +515,7 @@
         rating: "5", 
         reviews: ["The best courses you can find", "Nice!"],
     }));
-    console.log(addAd({
+    console.log(adCollection.add({
         id: "100",
         description: "Скидка на курсы английского языка",
         createdAt: new Date("2021-03-02T00:00:00"),
@@ -486,7 +528,7 @@
         rating: 5, 
         reviews: ["The best courses you can find", "Nice!"],
     }));
-    console.log(addAd({
+    console.log(adCollection.add({
         id: "101",
         createdAt: new Date("2021-03-02T00:00:00"),
         link: "englishcourse2021.by",
@@ -497,7 +539,8 @@
         rating: 5, 
         reviews: ["The best courses you can find", "Nice!"],
     }));
-    console.log(addAd({
+    console.log(adCollection.adList);
+    console.log(adCollection.add({
         id: "102",
         description: "Скидка на курсы английского языка",
         createdAt: "today",
@@ -510,7 +553,7 @@
         rating: 5, 
         reviews: ["The best courses you can find", "Nice!"],
     }));
-    console.log(addAd({
+    console.log(adCollection.add({
         id: "103",
         description: "Скидка на курсы английского языка",
         createdAt: new Date("2021-03-02T00:00:00"),
@@ -523,7 +566,7 @@
         rating: "5", 
         reviews: ["The best courses you can find", "Nice!"],
     }));
-    console.log(addAd({
+    console.log(adCollection.add({
         id: "104",
         description: "Скидка на курсы английского языка",
         createdAt: new Date("2021-03-02T00:00:00"),
@@ -536,7 +579,7 @@
         rating: "5", 
         reviews: ["The best courses you can find", "Nice!"],
     }));
-    console.log(addAd({
+    console.log(adCollection.add({
         id: "102",
         description: "Скидка на курсы английского языка",
         createdAt: "today",
@@ -549,16 +592,73 @@
         rating: 5, 
         reviews: ["The best courses you can find", "Nice!"],
     }));
-    console.log(getAds(0, 20));
-    console.log(editAd(10,  {discount: "5%"}));
-    console.log(editAd("11",  {discount: "5%", id: "124"}));
-    console.log(editAd("12",  {discount: "5%", rating: 2, description: "new description"}));
-    console.log(editAd("13", {rating: "5"}));
-    console.log(getAds(0, 20));
-    console.log(removeAd("1"));
-    console.log(getAds(0, 20));
-    console.log(removeAd("2"));
-    console.log(getAds(0, 20));
-    console.log(removeAd("first"));
-    console.log(getAds(0, 20));
+    console.log(adCollection.getPage(0, 20));
+    console.log(adCollection.edit(10,  {discount: "5%"}));
+    console.log(adCollection.edit("11",  {discount: "5%", id: "124"}));
+    console.log(adCollection.edit("12",  {discount: "5%", rating: 2, description: "new description"}));
+    console.log(adCollection.edit("13", {rating: "5"}));
+    console.log(adCollection.getPage(0, 25));
+    console.log(adCollection.remove("1"));
+    console.log(adCollection.getPage(0, 20));
+    console.log(adCollection.remove("2"));
+    console.log(adCollection.getPage(0, 20));
+    console.log(adCollection.remove("first"));
+    console.log(adCollection.getPage(0, 20));
+    adCollection.clear();
+    console.log(adCollection.getPage());
+    console.log(adCollection.addAll([
+        {
+            id: "59",
+            description: "Столы",
+            createdAt: new Date("2021-03-05T00:00:00"),
+            link: "NiceTables2021.by",
+            vendor: "NiceTableCompany",
+            photoLink: "https://images.by.prom.st/134403848_pismennye-stoly-iz.jpg",
+            hashTags: ["table", "forIT"],
+            discount: "50%",
+            validUntil: new Date("2021-06-01T00:00:00"),
+            rating: 4, 
+            reviews: ["nice!", "good tables"],
+        },
+        {
+            id: "60",
+            description: "Столы",
+            createdAt: new Date("2021-03-06T00:00:00"),
+            link: "BestTalbe2021.by",
+            vendor: "BestTableCompany",
+            photoLink: "https://images.by.prom.st/134403848_pismennye-stoly-iz.jpg",
+            hashTags: ["table", "forIT"],
+            discount: "50%",
+            validUntil: new Date("2021-06-01T00:00:00"),
+            rating: "5", 
+            reviews: ["The best tables!"],
+        },
+        {
+            id: "61",
+            description: "Столы",
+            createdAt: new Date("2021-03-07T00:00:00"),
+            link: "worsttables.by",
+            vendor: "WorstTableCompany",
+            photoLink: "https://images.by.prom.st/134403848_pismennye-stoly-iz.jpg",
+            hashTags: "table, forIT, worst",
+            discount: "100%",
+            validUntil: new Date("2021-06-01T00:00:00"),
+            rating: 1, 
+            reviews: ["its really worst!", "-5"],
+        },
+        {
+            id: "62",
+            description: "Столы",
+            createdAt: new Date("2021-03-08T00:00:00"),
+            link: "nobadtable.by",
+            vendor: "NoBadTableCompany",
+            photoLink: "https://images.by.prom.st/134403848_pismennye-stoly-iz.jpg",
+            hashTags: ["table", "forIT", "nobad"],
+            discount: "70%",
+            validUntil: new Date("2021-06-01T00:00:00"),
+            rating: 3, 
+            reviews: ["No bad"],
+        },
+    ]));
+    console.log(adCollection.getPage());
 }());
