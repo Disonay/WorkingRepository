@@ -1,4 +1,4 @@
-package com.example.WebApplication;
+package com.task5.servlets;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;

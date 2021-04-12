@@ -1,6 +1,5 @@
-package com.example.WebApplication;
+package com.task5.servlets;
 
-import com.google.gson.Gson;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -14,7 +13,7 @@ public class checkServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("application/json");
-        String json = new Gson().toJson("{'status': 'true'}");
+        String json = "{'status': 'true'}";
         resp.getOutputStream().println(json);
     }
 }
