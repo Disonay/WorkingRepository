@@ -1,4 +1,4 @@
-package com;
+package com.example.WebApplication;
 
 import java.io.*;
 import javax.servlet.ServletException;
