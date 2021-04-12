@@ -1,7 +1,12 @@
-package com.restapi.servlets;
+package com.collection;
 
 import java.lang.reflect.Array;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class adClass {
     private String id;
@@ -10,24 +15,22 @@ public class adClass {
     private String link;
     private String vendor;
     private String photoLink;
-    private Array hashTags;
+    private ArrayList<String> hashTags;
     private String discount;
     private Date validUntil;
-    private Number rating;
-    private Array reviews;
-    adClass(String id, String description, Date createdAt, String link, String vendor, String photoLink, Array hashTags, String
-            discount, Date validUntil, Number rating, Array reviews) {
-        this.reviews = reviews;
-        this.description = description;
-        this.createdAt = createdAt;
-        this.link = link;
-        this.vendor = vendor;
-        this.photoLink = photoLink;
-        this.hashTags = hashTags;
-        this.discount = discount;
-        this.validUntil = validUntil;
-        this.rating = rating;
-        this.reviews = reviews;
+    private double rating;
+    private ArrayList<String> reviews;
+    public adClass() {
+        id = new String();
+        description = new String();
+        createdAt = new Date();
+        link = new String();
+        vendor = new String();
+        photoLink = new String();
+        hashTags = new ArrayList<String>();
+        discount = new String();
+        validUntil = new Date();
+        reviews = new ArrayList<String>();
     }
     public void setId (String id) {
         this.id = id;
@@ -47,7 +50,7 @@ public class adClass {
     public void setPhotoLink (String photoLink) {
         this.photoLink = photoLink;
     }
-    public void setHashTags (Array hashTags) {
+    public void setHashTags (ArrayList<String> hashTags) {
         this.hashTags = hashTags;
     }
     public void setDiscount (String discount) {
@@ -56,10 +59,10 @@ public class adClass {
     public void setValidUntil (Date validUntil) {
         this.validUntil = validUntil;
     }
-    public void setRating (Number rating) {
+    public void setRating (double rating) {
         this.rating = rating;
     }
-    public void setReviews (Array reviews) {
+    public void setReviews (ArrayList<String> reviews) {
         this.reviews = reviews;
     }
     public String getId () {
@@ -80,7 +83,7 @@ public class adClass {
     public String getPhotoLink () {
         return photoLink;
     }
-    public Array getHashTags () {
+    public ArrayList<String> getHashTags () {
         return hashTags;
     }
     public String getDiscount () {
@@ -89,10 +92,39 @@ public class adClass {
     public Date getValidUntil () {
         return validUntil;
     }
-    public Number getRating () {
+    public double getRating () {
         return rating;
     }
-    public Array getReviews () {
+    public ArrayList<String> getReviews () {
         return reviews;
+    }
+
+    public boolean validateAd() {
+        if (id.length() == 0 || description.length() == 0 || description.length() >= 200 || link.length() == 0
+                || vendor.length() == 0 || hashTags.size() == 0 || discount.length() == 0) {
+            return false;
+        }
+        return true;
+    }
+    public boolean validateDateAndNumber(String createdAt, String rating, String validUntil) {
+        try {
+            this.createdAt = new SimpleDateFormat("dd.MM.yyyy").parse(createdAt);
+            System.out.println(this.createdAt.toString());
+            this.validUntil = new SimpleDateFormat("dd.MM.yyyy").parse(validUntil);
+            this.rating = Double.parseDouble(rating);
+        }
+        catch (Exception e) {
+            System.out.println("there");
+            return false;
+        }
+        return true;
+    }
+    public boolean filterTags(ArrayList<String> tags) {
+        for (String tag : tags) {
+            if (!hashTags.contains(tag)) {
+                return false;
+            }
+        }
+        return true;
     }
 }
