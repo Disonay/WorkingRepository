@@ -28,6 +28,9 @@
                 return ad.hashTags.every(tag => filterTags.find(ftag => ftag === tag));
             }
         }
+        getAll() {
+            return this.#adList;
+        }
         getPage(skip = 0, top = 10, filterConfig = undefined) {
             if (typeof skip !== "number" || typeof top !== "number" ) {
                 console.log("Skip or top are not numbers!");
@@ -52,7 +55,7 @@
                     }
                  }
             }
-            filterAds = filterAds.slice(skip, top);
+            filterAds = filterAds.slice(skip, skip+top);
             return filterAds;
         }
 
@@ -61,7 +64,7 @@
         }
 
         static validateAd(adItem) {
-            let requiredFileds = ["id", "description", "link", "createdAt", "vendor", "hashTags", "discount", "validUntil"];
+            let requiredFileds = ["id", "nameOfService","description", "link", "createdAt", "vendor", "hashTags", "discount", "validUntil"];
         for (let i = 0; i < requiredFileds.length; i++) {
             if (adItem[requiredFileds[i]] == undefined) {
                 return false;
@@ -74,6 +77,12 @@
                         return false;
                     }
                     break;
+                case "nameOfService": {
+                    if (typeof adItem.nameOfService !== "string" && !adItem.nameOfService.length) {
+                        return false;
+                    }
+                    break;
+                }
                 case "description":
                     if (typeof adItem.description !== "string" || adItem.description.length >= 200 || !adItem.description.length) {
                         return false;
@@ -176,9 +185,129 @@
         return false;
         }
     }
+    class View {
+        #adCollecton;
+        #userName;
+        #isVendor;
+        #adTemplate;
+        #commentTemplate
+        constructor(ads, userName, isVendor) {
+            this.#adCollecton = new adModel(ads);
+            this.#userName = userName;
+            this.#isVendor = isVendor;
+            this.#adTemplate = document.querySelector(".ad-template").content;
+            this.#commentTemplate = this.#adTemplate.querySelector(".comment-template").content;
+        }
+        showUser() {
+            if (this.#userName && this.#userName.length) {
+                document.querySelector(".user-name").textContent = this.#userName;
+                document.querySelector(".sign-button").textContent = "Sign out";
+            }
+            else {
+                document.querySelector(".user-icon").style.visibility = "hidden";
+                document.querySelector(".sign-button").textContent = "Sign in";
+
+            }
+        }
+        #createDomElement(ad) {
+            let template = document.importNode(this.#adTemplate, true);
+            template.querySelector(".ad-img").setAttribute("src", ad.photoLink);
+            template.querySelector(".vendor-name").setAttribute("value",ad.vendor );
+            template.querySelector(".name").setAttribute("value", ad.nameOfService);
+            template.querySelector(".rating-number").textContent = ad.rating;
+            template.querySelector(".short-description").textContent = ad.description;
+            template.querySelector(".link").setAttribute("href", ad.link);
+            template.querySelector(".link").textContent = ad.link;
+            let comments = template.querySelector(".main-feedback-field");
+            let comment;
+            ad.reviews.forEach(review => {
+                comment = document.importNode(this.#commentTemplate, true);
+                comment.querySelector(".comment-text").textContent = review;
+                comments.appendChild(comment);
+            })
+            template.querySelector(".time").setAttribute("datetime", ad.createdAt.toDateString());
+            template.querySelector(".time").textContent = ad.createdAt.toDateString();
+            template.querySelector(".until").textContent = ad.validUntil.toDateString();
+            template.querySelector(".percent").textContent = ad.discount.slice(0, -1);
+            let tags = template.querySelector(".hashtags");
+            ad.hashTags.forEach(tag => {
+                let hashTag = document.createElement('a');
+                hashTag.setAttribute("href", "");
+                hashTag.textContent = "#" + tag;
+                tags.appendChild(hashTag);
+            })
+            if (!this.#userName || !this.#userName.length) {
+                template.querySelector(".add-comment").style.visibility = "hidden";
+            }
+            if (this.#userName && this.#isVendor && this.#userName === ad.vendor) {
+                template.querySelector(".edit").style.visibility = "visible";
+            }
+            else {
+                template.querySelector(".edit").style.visibility = "hidden";
+            }
+            return template;
+        }
+        showAds() {
+            let tape = document.querySelector(".tape");
+            document.querySelectorAll(".ad-class").forEach( ad => ad.remove());
+            this.#adCollecton.getPage().forEach(ad => tape.appendChild(this.#createDomElement(ad)));
+        }
+        addAd(ad) {
+            if (this.#adCollecton.add(ad)) {
+                this.showAds();
+                return true;
+            }
+            return false;
+        }
+        editAd(id, ad){
+            if(this.#adCollecton.edit(id, ad)){
+                this.showAds();
+                return true;
+            }
+            return false;
+        }
+        remove(id) {
+            if (this.#adCollecton.remove(id)) {
+                this.showAds();
+                return true;
+            }
+            return false;
+        }
+        filterTags() {
+            let uniqTags = [];
+            this.#adCollecton.getAll().forEach(ad => {
+                ad.hashTags.forEach(tag => {
+                    if (!uniqTags.includes(tag)) {
+                        uniqTags.push(tag);
+                    }
+                });
+            });
+            let select = document.querySelector(".select-filter-tags");
+            uniqTags.forEach(tag => {
+                let tags = document.createElement("option");
+                tags.textContent = tag;
+                select.append(tags);
+            })
+        }
+        filterVendors() {
+            let uniqVendors = [];
+            this.#adCollecton.getAll().forEach(ad => {
+                    if (!uniqVendors.includes(ad.vendor)) {
+                        uniqVendors.push(ad.vendor);
+                    }
+                });
+            let select = document.querySelector(".select-filter-vendor");
+            uniqVendors.forEach(v => {
+                let vendor = document.createElement("option");
+                vendor.textContent = v;
+                select.append(vendor);
+            });
+        }
+    }
     var adCollection = new adModel([
         {
             id: "1",
+            nameOfService: "education",
             description: "Скидка на курсы немецкого языка",
             createdAt: new Date("2021-03-02T00:00:00"),
             link: "germancourse2021.by",
@@ -192,6 +321,7 @@
         },
         {
             id: "2",
+            nameOfService: "shop",
             description: "Товары и услуги #1",
             createdAt: new Date("2021-03-22T00:00:00"),
             link: "corpshop.by",
@@ -205,6 +335,7 @@
         },
         {
             id: "3",
+            nameOfService: "shop",
             description: "Товары и услуги #2",
             createdAt: new Date("2021-03-22T00:00:00"),
             link: "corpshop.by",
@@ -218,6 +349,7 @@
         },
         {
             id: "4",
+            nameOfService: "shop",
             description: "Товары и услуги #3",
             createdAt: new Date("2021-03-22T00:00:00"),
             link: "corpshop.by",
@@ -231,6 +363,7 @@
         },
         {
             id: "5",
+            nameOfService: "shop",
             description: "Товары и услуги #4",
             createdAt: new Date("2021-03-22T00:00:00"),
             link: "corpshop.by",
@@ -244,6 +377,7 @@
         },
         {
             id: "6",
+            nameOfService: "shop",
             description: "Товары и услуги #5",
             createdAt: new Date("2021-03-22T00:00:00"),
             link: "corpshop.by",
@@ -257,6 +391,7 @@
         },
         {
             id: "7",
+            nameOfService: "repair",
             description: "Окна",
             createdAt: new Date("2021-03-03T00:00:00"),
             link: "windows2021.by",
@@ -270,6 +405,7 @@
         },
         {
             id: "8",
+            nameOfService: "repair",
             description: "Окна",
             createdAt: new Date("2021-03-04T00:00:00"),
             link: "GoodWindows2021.by",
@@ -283,6 +419,7 @@
         },
         {
             id: "9",
+            nameOfService: "repair",
             description: "Окна",
             createdAt: new Date("2021-03-05T00:00:00"),
             link: "NiceWindows2021.by",
@@ -296,6 +433,7 @@
         },
         {
             id: "10",
+            nameOfService: "repair",
             description: "Окна",
             createdAt: new Date("2021-03-06T00:00:00"),
             link: "BestWindows2021.by",
@@ -309,11 +447,12 @@
         },
         {
             id: "11",
+            nameOfService: "repair",
             description: "Двери",
             createdAt: new Date("2021-03-07T00:00:00"),
             link: "worstdoors.by",
             vendor: "WorstDoorsCompany",
-            photoLink: "https://lh3.googleusercontent.com/proxy/kgwBg4MAcjhdwNRK7agal820iRYrHRPHPTP0qen7xZpm1n2K6JmukLexEOf_0lxCH1mpwfcuSiyxkB7Xc1nlPd3pXuAJLSx2R9NEv_1vOgrbHVnrIRLOkOc",
+            photoLink: "https://virtoni.by/upload/iblock/5b9/emalirovannye_dveri_2.jpg",
             hashTags: ["doors", "forIT", "worst"],
             discount: "100%",
             validUntil: new Date("2021-06-01T00:00:00"),
@@ -322,11 +461,12 @@
         },
         {
             id: "12",
+            nameOfService: "repair",
             description: "Двери",
             createdAt: new Date("2021-03-08T00:00:00"),
             link: "nobaddoors.by",
             vendor: "NoBadDoorsCompany",
-            photoLink: "https://lh3.googleusercontent.com/proxy/kgwBg4MAcjhdwNRK7agal820iRYrHRPHPTP0qen7xZpm1n2K6JmukLexEOf_0lxCH1mpwfcuSiyxkB7Xc1nlPd3pXuAJLSx2R9NEv_1vOgrbHVnrIRLOkOc",
+            photoLink: "https://virtoni.by/upload/iblock/5b9/emalirovannye_dveri_2.jpg",
             hashTags: ["doors", "forIT", "nobad"],
             discount: "70%",
             validUntil: new Date("2021-06-01T00:00:00"),
@@ -335,11 +475,12 @@
         },
         {
             id: "13",
+            nameOfService: "repair",
             description: "Двери",
             createdAt: new Date("2021-03-09T00:00:00"),
             link: "gooddoors.by",
             vendor: "GoodDoorsCompany",
-            photoLink: "https://lh3.googleusercontent.com/proxy/kgwBg4MAcjhdwNRK7agal820iRYrHRPHPTP0qen7xZpm1n2K6JmukLexEOf_0lxCH1mpwfcuSiyxkB7Xc1nlPd3pXuAJLSx2R9NEv_1vOgrbHVnrIRLOkOc",
+            photoLink: "https://virtoni.by/upload/iblock/5b9/emalirovannye_dveri_2.jpg",
             hashTags: ["doors", "forIT", "good"],
             discount: "60%",
             validUntil: new Date("2021-06-01T00:00:00"),
@@ -348,11 +489,12 @@
         },
         {
             id: "14",
+            nameOfService: "repair",
             description: "Двери",
             createdAt: new Date("2021-03-10T00:00:00"),
             link: "nicedoors.by",
             vendor: "NiceDoorsCompany",
-            photoLink: "https://lh3.googleusercontent.com/proxy/kgwBg4MAcjhdwNRK7agal820iRYrHRPHPTP0qen7xZpm1n2K6JmukLexEOf_0lxCH1mpwfcuSiyxkB7Xc1nlPd3pXuAJLSx2R9NEv_1vOgrbHVnrIRLOkOc",
+            photoLink: "https://virtoni.by/upload/iblock/5b9/emalirovannye_dveri_2.jpg",
             hashTags: ["doors", "forIT", "nice"],
             discount: "50%",
             validUntil: new Date("2021-06-01T00:00:00"),
@@ -361,11 +503,12 @@
         },
         {
             id: "15",
+            nameOfService: "repair",
             description: "Двери",
             createdAt: new Date("2021-03-11T00:00:00"),
             link: "greatdoors.by",
             vendor: "GreatDoorsCompany",
-            photoLink: "https://lh3.googleusercontent.com/proxy/kgwBg4MAcjhdwNRK7agal820iRYrHRPHPTP0qen7xZpm1n2K6JmukLexEOf_0lxCH1mpwfcuSiyxkB7Xc1nlPd3pXuAJLSx2R9NEv_1vOgrbHVnrIRLOkOc",
+            photoLink: "https://virtoni.by/upload/iblock/5b9/emalirovannye_dveri_2.jpg",
             hashTags: ["doors", "forIT", "great"],
             discount: "10%",
             validUntil: new Date("2021-06-01T00:00:00"),
@@ -374,6 +517,7 @@
         },
         {
             id: "16",
+            nameOfService: "shop",
             description: "Ноутбуки",
             createdAt: new Date("2021-03-20T00:00:00"),
             link: "notebooks.by",
@@ -387,6 +531,7 @@
         },
         {
             id: "17",
+            nameOfService: "shop",
             description: "Телефоны",
             createdAt: new Date("2021-03-19T00:00:00"),
             link: "phone.by",
@@ -400,6 +545,7 @@
         },
         {
             id: "18",
+            nameOfService: "education",
             description: "Скидка на курсы японского языка",
             createdAt: new Date("2021-03-22T00:00:00"),
             link: "japancourse2021.by",
@@ -413,6 +559,7 @@
         },
         {
             id: "19",
+            nameOfService: "education",
             description: "Скидка на курсы китайского языка",
             createdAt: new Date("2021-03-22T00:00:00"),
             link: "chinacourse2021.by",
@@ -426,6 +573,7 @@
         },
         {
             id: "20",
+            nameOfService: "education",
             description: "Скидка на курсы испанского языка",
             createdAt: new Date("2021-03-22T00:00:00"),
             link: "spaincourse2021.by",
@@ -437,8 +585,8 @@
             rating: 5, 
             reviews: ["The best courses you can find", "Nice!"],
         },
-
     ])
+
     console.log(adCollection.getPage());
     console.log(adCollection.getPage(0, 20));
     console.log(adCollection.getPage(5, 15));
@@ -504,6 +652,7 @@
     }));
     console.log(adModel.validateAd({
         id: "1",
+        nameOfService: "education",
         description: "Скидка на курсы английского языка",
         createdAt: "today",
         link: "englishcourse2021.by",
@@ -530,6 +679,7 @@
     }));
     console.log(adCollection.add({
         id: "101",
+        nameOfService: "education",
         createdAt: new Date("2021-03-02T00:00:00"),
         link: "englishcourse2021.by",
         vendor: "Eng",
@@ -542,6 +692,7 @@
     console.log(adCollection.adList);
     console.log(adCollection.add({
         id: "102",
+        nameOfService: "education",
         description: "Скидка на курсы английского языка",
         createdAt: "today",
         link: "englishcourse2021.by",
@@ -555,6 +706,7 @@
     }));
     console.log(adCollection.add({
         id: "103",
+        nameOfService: "education",
         description: "Скидка на курсы английского языка",
         createdAt: new Date("2021-03-02T00:00:00"),
         link: "englishcourse2021.by",
@@ -568,6 +720,7 @@
     }));
     console.log(adCollection.add({
         id: "104",
+        nameOfService: "education",
         description: "Скидка на курсы английского языка",
         createdAt: new Date("2021-03-02T00:00:00"),
         link: "englishcourse2021.by",
@@ -581,6 +734,7 @@
     }));
     console.log(adCollection.add({
         id: "102",
+        nameOfService: "education",
         description: "Скидка на курсы английского языка",
         createdAt: "today",
         link: "englishcourse2021.by",
@@ -604,11 +758,11 @@
     console.log(adCollection.getPage(0, 20));
     console.log(adCollection.remove("first"));
     console.log(adCollection.getPage(0, 20));
-    adCollection.clear();
     console.log(adCollection.getPage());
     console.log(adCollection.addAll([
         {
             id: "59",
+            nameOfService: "repair",
             description: "Столы",
             createdAt: new Date("2021-03-05T00:00:00"),
             link: "NiceTables2021.by",
@@ -622,6 +776,7 @@
         },
         {
             id: "60",
+            nameOfService: "repair",
             description: "Столы",
             createdAt: new Date("2021-03-06T00:00:00"),
             link: "BestTalbe2021.by",
@@ -635,6 +790,7 @@
         },
         {
             id: "61",
+            nameOfService: "repair",
             description: "Столы",
             createdAt: new Date("2021-03-07T00:00:00"),
             link: "worsttables.by",
@@ -648,6 +804,7 @@
         },
         {
             id: "62",
+            nameOfService: "repair",
             description: "Столы",
             createdAt: new Date("2021-03-08T00:00:00"),
             link: "nobadtable.by",
@@ -661,4 +818,26 @@
         },
     ]));
     console.log(adCollection.getPage());
+    let view = new View(adCollection.getPage(), "WindowCompany", true);
+    view.showUser(); 
+    view.showAds();
+    view.filterVendors();
+    view.filterTags();
+    view.addAd({
+        id: "62",
+        description: "Столы",
+        createdAt: new Date("2021-03-03T00:00:00"),
+        link: "nobadtable.by",
+        vendor: "NoBadTableCompany",
+        photoLink: "https://images.by.prom.st/134403848_pismennye-stoly-iz.jpg",
+        hashTags: ["table", "forIT", "nobad"],
+        discount: "70%",
+        validUntil: new Date("2021-06-01T00:00:00"),
+        rating: 3, 
+        reviews: ["No bad"],
+    });
+    view.remove(5);
+    view.remove(7);
+    view.editAd("8", {discount: "20%"});
+    view.editAd("8", {vendor: "AnotherVendor"});
 }());
