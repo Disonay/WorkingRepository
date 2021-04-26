@@ -3,14 +3,14 @@
 <head>
 	<title></title>
 	<link rel="stylesheet" href="./resources/css/styles.css">
-	<script src="./resources/js/script.js"></script>
+	<script charset="utf-8" src="./resources/js/script.js" defer></script>
 </head>
 <body>
 	<header>
 		<div class = "site-name"><span>Corp</span>Goods</div>
-		<div class="user-name">Dan</div>
+		<div class="user-name"></div>
 		<img src="./resources/svges/userIcon.svg" alt="user-icon" class = "user-icon">
-		<button class = "sign-button" type="button">Sign out</button>
+		<button class = "sign-button" type="button"></button>
 	</header>
 	<main>
 		<div class = "filter">
@@ -27,283 +27,60 @@
 			</div>
 			<div class="filter-tags">
 				<img src="./resources/svges/tags.svg" alt="tags">
-				<select name="tags">
-					<option selected value="#tags"><a href="">#tags</a></option>
+				<select name="tags" class="select-filter-tags">
 				</select>
 			</div>
 			<div class = "filter-vendor">
-				<select name="vendors">
-					<option selected value="vendor-name">Vendor name</option>
+				<select name="vendors" class="select-filter-vendor">
 				</select>
 			</div>
 		</div>
 		<section class = "tape">
+			<template class = "ad-template">
 			<div class="ad-class">
 				<div class = "ad">
-					<img src="./resources/svges/stackImg.svg" alt="stack-img" class="stack-img">
+					<img src="" alt="ad-img" class="ad-img">
 					<div class="description">
-						<input type="text" clsass="name" value="Name" readonly>
-						<input type="text" class="vendor-name" value = "Vendor name" readonly>
+						<input type="text" class="name"  readonly>
+						<input type="text" class="vendor-name" readonly>
 						<div class="overall-rating">
 							<img src="./resources/svges/rating.svg" alt="rating">
-							<p>5.0</p>
+							<p class = "rating-number"></p>
 						</div>
-						<textarea name="short-description" class="short-description" cols="30" rows="10" readonly>Short description</textarea>
-						<a href="mylink.com">mylink.com</a>
-						<a href="">#tag</a>
+						<textarea name="short-description" class="short-description" cols="30" rows="10" readonly></textarea>
+						<a class = "link" href=""></a>
+						<div class = "hashtags">
+
+						</div>
 					</div>
 					<div class = "feedback">
 						<div class="header-feedback">FeedBack</div>
 						<div class="main-feedback-field">
+							<template class="comment-template">
 							<div class="comment">
 								<figure>
 									<img src="./resources/svges/userIcon.svg" alt="user-icon">
 									<figcaption>Dan</figcaption>
 								</figure>
-								<div class = "comment-text">Great!</div>
+								<div class = "comment-text"></div>
 							</div>
-							<div class="comment">
-								<figure>
-									<img src="./resources/svges/userIcon.svg" alt="user-icon">
-									<figcaption>Dan</figcaption>
-								</figure>
-								<div class = "comment-text">Great!</div>
-							</div>
-							<div class="comment">
-								<figure>
-									<img src="./resources/svges/userIcon.svg" alt="user-icon">
-									<figcaption>Dan</figcaption>
-								</figure>
-								<div class = "comment-text">Great!</div>
-							</div>
-							<button class = "add-comment">Add</button>
+							</template>
 						</div>
+						<button class = "add-comment">Add</button>
 					</div>
 				</div>
 				<div class="ad-info">
-					<p class = "date">Date: <time datetime="28.02.2021"> 28.02.2021</time></p>
+					<p class = "date">Date: <time class="time" datetime=""></time></p>
 					<div class="center-info">
-						<p class = "until">Until: </p>
-						<time datetime="28.02.2022"> 28.02.2022</time>
+						<p class = "until"></p>
+						<time datetime=""></time>
 						<img src="./resources/svges/percent.svg" alt="percent">
-						<p class="percent">80</p>
+						<p class="percent"></p>
 					</div>
 					<button class="edit">Edit</button>
 				</div>
 			</div>
-			<div class="ad-class">
-				<div class = "ad">
-					<img src="./resources/svges/stackImg.svg" alt="stack-img" class="stack-img">
-					<div class="description">
-						<input type="text" clsass="name" value="Name" readonly>
-						<input type="text" class="vendor-name" value = "Vendor name" readonly>
-						<div class="overall-rating">
-							<img src="./resources/svges/rating.svg" alt="rating">
-							<p>5.0</p>
-						</div>
-						<textarea name="short-description" class="short-description" cols="30" rows="10" readonly>Short description</textarea>
-						<a href="mylink.com">mylink.com</a>
-						<a href="">#tag</a>
-					</div>
-					<div class = "feedback">
-						<div class="header-feedback">FeedBack</div>
-						<div class="main-feedback-field">
-							<div class="comment">
-								<figure>
-									<img src="./resources/svges/userIcon.svg" alt="user-icon">
-									<figcaption>Dan</figcaption>
-								</figure>
-								<div class = "comment-text">Great!</div>
-							</div>
-							<div class="comment">
-								<figure>
-									<img src="./resources/svges/userIcon.svg" alt="user-icon">
-									<figcaption>Dan</figcaption>
-								</figure>
-								<div class = "comment-text">Great!</div>
-							</div>
-							<div class="comment">
-								<figure>
-									<img src="./resources/svges/userIcon.svg" alt="user-icon">
-									<figcaption>Dan</figcaption>
-								</figure>
-								<div class = "comment-text">Great!</div>
-							</div>
-							<button class = "add-comment">Add</button>
-						</div>
-					</div>
-				</div>
-				<div class="ad-info">
-					<p class = "date">Date: <time datetime="28.02.2021"> 28.02.2021</time></p>
-					<div class="center-info">
-						<p class = "until">Until: </p>
-						<time datetime="28.02.2022"> 28.02.2022</time>
-						<img src="./resources/svges/percent.svg" alt="percent">
-						<p class="percent">80</p>
-					</div>
-					<button class="edit">Edit</button>
-				</div>
-			</div>
-			<div class="ad-class">
-				<div class = "ad">
-					<img src="./resources/svges/stackImg.svg" alt="stack-img" class="stack-img">
-					<div class="description">
-						<input type="text" clsass="name" value="Name" readonly>
-						<input type="text" class="vendor-name" value = "Vendor name" readonly>
-						<div class="overall-rating">
-							<img src="./resources/svges/rating.svg" alt="rating">
-							<p>5.0</p>
-						</div>
-						<textarea name="short-description" class="short-description" cols="30" rows="10" readonly>Short description</textarea>
-						<a href="mylink.com">mylink.com</a>
-						<a href="">#tag</a>
-					</div>
-					<div class = "feedback">
-						<div class="header-feedback">FeedBack</div>
-						<div class="main-feedback-field">
-							<div class="comment">
-								<figure>
-									<img src="./resources/svges/userIcon.svg" alt="user-icon">
-									<figcaption>Dan</figcaption>
-								</figure>
-								<div class = "comment-text">Great!</div>
-							</div>
-							<div class="comment">
-								<figure>
-									<img src="./resources/svges/userIcon.svg" alt="user-icon">
-									<figcaption>Dan</figcaption>
-								</figure>
-								<div class = "comment-text">Great!</div>
-							</div>
-							<div class="comment">
-								<figure>
-									<img src="./resources/svges/userIcon.svg" alt="user-icon">
-									<figcaption>Dan</figcaption>
-								</figure>
-								<div class = "comment-text">Great!</div>
-							</div>
-							<button class = "add-comment">Add</button>
-						</div>
-					</div>
-				</div>
-				<div class="ad-info">
-					<p class = "date">Date: <time datetime="28.02.2021"> 28.02.2021</time></p>
-					<div class="center-info">
-						<p class = "until">Until: </p>
-						<time datetime="28.02.2022"> 28.02.2022</time>
-						<img src="./resources/svges/percent.svg" alt="percent">
-						<p class="percent">80</p>
-					</div>
-					<button class="edit">Edit</button>
-				</div>
-			</div>
-			<div class="ad-class">
-				<div class = "ad">
-					<img src="./resources/svges/stackImg.svg" alt="stack-img" class="stack-img">
-					<div class="description">
-						<input type="text" clsass="name" value="Name" readonly>
-						<input type="text" class="vendor-name" value = "Vendor name" readonly>
-						<div class="overall-rating">
-							<img src="./resources/svges/rating.svg" alt="rating">
-							<p>5.0</p>
-						</div>
-						<textarea name="short-description" class="short-description" cols="30" rows="10" readonly>Short description</textarea>
-						<a href="mylink.com">mylink.com</a>
-						<a href="">#tag</a>
-					</div>
-					<div class = "feedback">
-						<div class="header-feedback">FeedBack</div>
-						<div class="main-feedback-field">
-							<div class="comment">
-								<figure>
-									<img src="./resources/svges/userIcon.svg" alt="user-icon">
-									<figcaption>Dan</figcaption>
-								</figure>
-								<div class = "comment-text">Great!</div>
-							</div>
-							<div class="comment">
-								<figure>
-									<img src="./resources/svges/userIcon.svg" alt="user-icon">
-									<figcaption>Dan</figcaption>
-								</figure>
-								<div class = "comment-text">Great!</div>
-							</div>
-							<div class="comment">
-								<figure>
-									<img src="./resources/svges/userIcon.svg" alt="user-icon">
-									<figcaption>Dan</figcaption>
-								</figure>
-								<div class = "comment-text">Great!</div>
-							</div>
-							<button class = "add-comment">Add</button>
-						</div>
-					</div>
-				</div>
-				<div class="ad-info">
-					<p class = "date">Date: <time datetime="28.02.2021"> 28.02.2021</time></p>
-					<div class="center-info">
-						<p class = "until">Until: </p>
-						<time datetime="28.02.2022"> 28.02.2022</time>
-						<img src="./resources/svges/percent.svg" alt="percent">
-						<p class="percent">80</p>
-					</div>
-					<button class="edit">Edit</button>
-				</div>
-			</div>
-			<div class="ad-class">
-				<div class = "ad">
-					<img src="./resources/svges/stackImg.svg" alt="stack-img" class="stack-img">
-					<div class="description">
-						<input type="text" clsass="name" value="Name" readonly>
-						<input type="text" class="vendor-name" value = "Vendor name" readonly>
-						<div class="overall-rating">
-							<img src="./resources/svges/rating.svg" alt="rating">
-							<p>5.0</p>
-						</div>
-						<textarea name="short-description" class="short-description" cols="30" rows="10" readonly>Short description</textarea>
-						<a href="mylink.com">mylink.com</a>
-						<a href="">#tag</a>
-					</div>
-					<div class = "feedback">
-						<div class="header-feedback">FeedBack</div>
-						<div class="main-feedback-field">
-							<div class="comment">
-								<figure>
-									<img src="./resources/svges/userIcon.svg" alt="user-icon">
-									<figcaption>Dan</figcaption>
-								</figure>
-								<div class = "comment-text">Great!</div>
-							</div>
-							<div class="comment">
-								<figure>
-									<img src="./resources/svges/userIcon.svg" alt="user-icon">
-									<figcaption>Dan</figcaption>
-								</figure>
-								<div class = "comment-text">Great!</div>
-							</div>
-							<div class="comment">
-								<figure>
-									<img src="./resources/svges/userIcon.svg" alt="user-icon">
-									<figcaption>Dan</figcaption>
-								</figure>
-								<div class = "comment-text">Great!</div>
-							</div>
-							<button class = "add-comment">Add</button>
-						</div>
-					</div>
-				</div>
-				<div class="ad-info">
-					<p class = "date">Date: <time datetime="28.02.2021"> 28.02.2021</time></p>
-					<div class="center-info">
-						<p class = "until">Until: </p>
-						<time datetime="28.02.2022"> 28.02.2022</time>
-						<img src="./resources/svges/percent.svg" alt="percent">
-						<p class="percent">80</p>
-					</div>
-					<button class="edit">Edit</button>
-				</div>
-			</div>
-			<button class = "more-button">More</button>
+		</template>
 		</section>
 	</main>
 	<footer>
