@@ -116,7 +116,7 @@ header .site-name {
         border-radius: 5px;
     }
         .filter {   
-        height: 19%;
+        height: fit-content;
         display: inline-flex;
         flex-direction: column;
         align-items: center;
@@ -161,6 +161,8 @@ header .site-name {
     font-size: 0.8em;
     color: #FFFFFF;
 }
+
+
 .center-info {
     width: 11em;
     display: flex;
@@ -264,7 +266,7 @@ header .site-name {
     margin-left: 0.2em;
 }
 
-.stack-img {
+.ad-img {
     width: 25%;
     margin: 1em;
     left:0;
@@ -284,6 +286,7 @@ header .site-name {
     flex-direction: column;
     align-items: center;
     flex-wrap: wrap;
+    margin-bottom: 0.65em;
     background-color: #ffffff;
     border-bottom-left-radius: 20px;
     border-bottom-right-radius: 20px;
@@ -316,11 +319,10 @@ figcaption {
     font-size: x-small;
 }
 .add-comment {
+    align-self: center;
     background: #BECCFF;
     width: 5em;
     border-radius: 44.2424px;
-    margin-top: 1em;
-    margin-bottom: 1em;
     font-family: Yu Gothic;
     font-style: normal;
     font-weight: bold;
