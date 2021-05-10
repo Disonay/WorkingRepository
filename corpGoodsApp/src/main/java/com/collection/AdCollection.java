@@ -6,11 +6,6 @@ import java.util.stream.Collectors;
 
 public class AdCollection {
     private static ArrayList<AdClass> ads;
-    public AdCollection() {
-        if (ads == null) {
-            ads = new ArrayList<>();
-        }
-    }
     public AdClass getById (String id) {
         System.out.println(ads.size());
         List<AdClass> idAds = ads.stream().filter(ad -> ad.getId().equals(id)).collect(Collectors.toList());

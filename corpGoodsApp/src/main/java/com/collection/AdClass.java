@@ -32,7 +32,7 @@ public class AdClass {
         validUntil = new Date();
         reviews = new ArrayList<String>();
     }
-    public AdClass(String id, String description, String link, String vendor, String photoLink, ArrayList<String> hashTags, String discount, ArrayList<String> reviews) {
+    public AdClass(String id, String description, String createdAt, String link, String vendor, String photoLink, ArrayList<String> hashTags, String discount, String validUntil, String rating,ArrayList<String> reviews) {
         this.id = id;
         setDescription(description);
         setLink(link);
@@ -41,6 +41,9 @@ public class AdClass {
         setHashTags(hashTags);
         setDiscount(discount);
         setReviews(reviews);
+        setCreatedAt(createdAt);
+        setValidUntil(validUntil);
+        setRating(rating);
     }
     public void setDescription (String description) {
         this.description = description;
@@ -48,15 +51,16 @@ public class AdClass {
     public void setCreatedAt (Date createdAt) {
         this.createdAt = createdAt;
     }
-    public boolean setCreatedAt (String createdAt) {
+    public void setCreatedAt (String createdAt) {
         try {
             this.createdAt = new SimpleDateFormat("dd.MM.yyyy").parse(createdAt);
+            System.out.println(createdAt);
         }
         catch (Exception e) {
+            System.out.println(createdAt);
+            this.createdAt = null;
             System.out.println("Wrong createdAt date");
-            return false;
         }
-        return true;
     }
     public void setLink (String link) {
         this.link = link;
@@ -81,6 +85,7 @@ public class AdClass {
             this.validUntil = new SimpleDateFormat("dd.MM.yyyy").parse(validUntil);
         }
         catch (Exception e) {
+            this.validUntil = null;
             System.out.println("Wrong validUntil date");
         }
     }
@@ -92,6 +97,7 @@ public class AdClass {
             this.rating = Double.parseDouble(rating);
         }
         catch (Exception e) {
+            this.rating = -1;
             System.out.println("Wrong rating");
         }
     }
@@ -134,7 +140,7 @@ public class AdClass {
 
     public boolean isValid() {
         if (id.length() == 0 || description.length() == 0 || description.length() >= 200 || link.length() == 0
-                || vendor.length() == 0 || hashTags.size() == 0 || discount.length() == 0) {
+                || vendor.length() == 0 || hashTags.size() == 0 || discount.length() == 0 || validUntil == null || createdAt == null || rating == -1) {
             return false;
         }
         return true;
