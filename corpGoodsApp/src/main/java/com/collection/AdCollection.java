@@ -23,10 +23,12 @@ public class AdCollection {
     }
 
     public boolean add(AdClass ad) {
-        if (ad.isValid()) {
-            if (getById(ad.getId()) == null) {
-                ads.add(ad);
-                return true;
+        if (ad != null) {
+            if (ad.isValid()) {
+                if (getById(ad.getId()) == null) {
+                    ads.add(ad);
+                    return true;
+                }
             }
         }
         return false;
