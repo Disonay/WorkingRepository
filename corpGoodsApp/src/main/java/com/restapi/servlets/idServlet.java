@@ -1,7 +1,7 @@
 package com.restapi.servlets;
 
 import com.collection.adCollection;
-import com.collection.adClass;
+import com.collection.AdClass;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 
@@ -59,7 +59,7 @@ public class idServlet extends HttpServlet {
         String validUntil = req.getParameter("validUntil");
         String rating = req.getParameter("rating");
         String[] reviews = req.getParameterValues("reviews");
-        adClass ad = new adClass(id, description, link, vendor, photoLink, new ArrayList<String>(Arrays.asList(hashTags)), discount, new ArrayList<String>(Arrays.asList(reviews)));
+        AdClass ad = new AdClass(id, description, link, vendor, photoLink, new ArrayList<String>(Arrays.asList(hashTags)), discount, new ArrayList<String>(Arrays.asList(reviews)));
         ad.setCreatedAt(createdAt);
         ad.setValidUntil(validUntil);
         ad.setRating(rating);
