@@ -59,16 +59,10 @@ public class idServlet extends HttpServlet {
         String validUntil = req.getParameter("validUntil");
         String rating = req.getParameter("rating");
         String[] reviews = req.getParameterValues("reviews");
-        adClass ad = new adClass();
-        ad.validateDateAndNumber(createdAt, rating, validUntil);
-        ad.setId(id);
-        ad.setDescription(description);
-        ad.setLink(link);
-        ad.setVendor(vendor);
-        ad.setPhotoLink(photoLink);
-        ad.setHashTags(new ArrayList<String>(Arrays.asList(hashTags)));
-        ad.setDiscount(discount);
-        ad.setReviews(new ArrayList<String>(Arrays.asList(reviews)));
+        adClass ad = new adClass(id, description, link, vendor, photoLink, new ArrayList<String>(Arrays.asList(hashTags)), discount, new ArrayList<String>(Arrays.asList(reviews)));
+        ad.setCreatedAt(createdAt);
+        ad.setValidUntil(validUntil);
+        ad.setRating(rating);
         adCollection ads = new adCollection();
         if (ads.add(ad)) {
             String json = "{'add': 'true'}";

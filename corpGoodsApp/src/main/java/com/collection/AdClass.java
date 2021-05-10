@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class adClass {
+public class AdClass {
     private String id;
     private String description;
     private Date createdAt;
@@ -20,7 +20,7 @@ public class adClass {
     private Date validUntil;
     private double rating;
     private ArrayList<String> reviews;
-    public adClass() {
+    public AdClass() {
         id = new String();
         description = new String();
         createdAt = new Date();
@@ -32,11 +32,31 @@ public class adClass {
         validUntil = new Date();
         reviews = new ArrayList<String>();
     }
+    public AdClass(String id, String description, String link, String vendor, String photoLink, ArrayList<String> hashTags, String discount, ArrayList<String> reviews) {
+        this.id = id;
+        setDescription(description);
+        setLink(link);
+        setVendor(vendor);
+        setPhotoLink(photoLink);
+        setHashTags(hashTags);
+        setDiscount(discount);
+        setReviews(reviews);
+    }
     public void setDescription (String description) {
         this.description = description;
     }
     public void setCreatedAt (Date createdAt) {
         this.createdAt = createdAt;
+    }
+    public boolean setCreatedAt (String createdAt) {
+        try {
+            this.createdAt = new SimpleDateFormat("dd.MM.yyyy").parse(createdAt);
+        }
+        catch (Exception e) {
+            System.out.println("Wrong createdAt date");
+            return false;
+        }
+        return true;
     }
     public void setLink (String link) {
         this.link = link;
@@ -56,8 +76,24 @@ public class adClass {
     public void setValidUntil (Date validUntil) {
         this.validUntil = validUntil;
     }
+    public void setValidUntil (String validUntil) {
+        try {
+            this.validUntil = new SimpleDateFormat("dd.MM.yyyy").parse(validUntil);
+        }
+        catch (Exception e) {
+            System.out.println("Wrong validUntil date");
+        }
+    }
     public void setRating (double rating) {
         this.rating = rating;
+    }
+    public void setRating(String rating) {
+        try {
+            this.rating = Double.parseDouble(rating);
+        }
+        catch (Exception e) {
+            System.out.println("Wrong rating");
+        }
     }
     public void setReviews (ArrayList<String> reviews) {
         this.reviews = reviews;
@@ -96,22 +132,9 @@ public class adClass {
         return reviews;
     }
 
-    public boolean validateAd() {
+    public boolean isValid() {
         if (id.length() == 0 || description.length() == 0 || description.length() >= 200 || link.length() == 0
                 || vendor.length() == 0 || hashTags.size() == 0 || discount.length() == 0) {
-            return false;
-        }
-        return true;
-    }
-    public boolean validateDateAndNumber(String createdAt, String rating, String validUntil) {
-        try {
-            this.createdAt = new SimpleDateFormat("dd.MM.yyyy").parse(createdAt);
-            System.out.println(this.createdAt.toString());
-            this.validUntil = new SimpleDateFormat("dd.MM.yyyy").parse(validUntil);
-            this.rating = Double.parseDouble(rating);
-        }
-        catch (Exception e) {
-            System.out.println("there");
             return false;
         }
         return true;

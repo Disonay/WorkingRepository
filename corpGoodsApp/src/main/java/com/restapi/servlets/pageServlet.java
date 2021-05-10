@@ -1,6 +1,6 @@
 package com.restapi.servlets;
 
-import com.collection.adClass;
+import com.collection.AdClass;
 import com.collection.adCollection;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
@@ -28,7 +28,7 @@ public class pageServlet extends HttpServlet {
         String vendor = req.getParameter("vendor");
         String[] tags = req.getParameterValues("hashTags");
         adCollection ads = new adCollection();
-        ArrayList<adClass> page = ads.getAds();
+        ArrayList<AdClass> page = ads.getAds();
         System.out.println(top);
         System.out.println(skip);
         skip = skip == null ? "0" : skip;
