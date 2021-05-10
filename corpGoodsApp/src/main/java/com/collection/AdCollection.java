@@ -1,6 +1,12 @@
 package com.collection;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
+
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,10 +33,36 @@ public class AdCollection {
             if (ad.isValid()) {
                 if (getById(ad.getId()) == null) {
                     ads.add(ad);
+
                     return true;
                 }
             }
         }
         return false;
+    }
+    public List<AdClass> getPage(String skip, String top, String createdAt, String vendor, String[] tags) {
+        ArrayList<AdClass> page = ads;
+        skip = skip == null ? "0" : skip;
+        top = top == null ? "10" : top;
+        System.out.println(top);
+        System.out.println(skip);
+        page.sort((a,b) -> a.getCreatedAt().compareTo(b.getCreatedAt()));
+        try {
+            if (createdAt != null) {
+                Date date = new SimpleDateFormat().parse(createdAt);
+                page = page.stream().filter(ad -> ad.getCreatedAt().equals(date)).collect(Collectors.toCollection(ArrayList::new));
+            }
+            if (vendor != null) {
+                page = page.stream().filter(ad -> ad.getVendor().equals(vendor)).collect(Collectors.toCollection(ArrayList::new));
+            }
+            if (tags != null) {
+                ArrayList<String> hashTags = new ArrayList<>(Arrays.asList(tags));
+                page = page.stream().filter(ad -> ad.filterTags(hashTags)).collect(Collectors.toCollection(ArrayList::new));
+            }
+            return page.subList(Integer.parseInt(skip), Integer.parseInt(skip) + Integer.parseInt(top));
+        }
+        catch (Exception e) {
+            return null;
+        }
     }
 }
