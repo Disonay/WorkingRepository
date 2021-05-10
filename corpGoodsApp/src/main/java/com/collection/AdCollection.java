@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class adCollection {
+public class AdCollection {
     private static ArrayList<AdClass> ads;
-    public adCollection() {
+    public AdCollection() {
         if (ads == null) {
             ads = new ArrayList<>();
         }

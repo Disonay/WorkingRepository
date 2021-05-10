@@ -1,7 +1,7 @@
 package com.restapi.servlets;
 
 import com.collection.AdClass;
-import com.collection.adCollection;
+import com.collection.AdCollection;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 
@@ -11,7 +11,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -27,7 +26,7 @@ public class pageServlet extends HttpServlet {
         String createdAt = req.getParameter("createdAt");
         String vendor = req.getParameter("vendor");
         String[] tags = req.getParameterValues("hashTags");
-        adCollection ads = new adCollection();
+        AdCollection ads = new AdCollection();
         ArrayList<AdClass> page = ads.getAds();
         System.out.println(top);
         System.out.println(skip);
