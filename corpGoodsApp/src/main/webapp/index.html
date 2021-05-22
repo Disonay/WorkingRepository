@@ -3,6 +3,9 @@
 <head>
 	<title></title>
 	<link rel="stylesheet" href="./resources/css/styles.css">
+	<script charset="utf-8" src="./resources/js/model.js" defer></script>
+	<script charset="utf-8" src="./resources/js/view.js" defer></script>
+	<script charset="utf-8" src="./resources/js/storage.js" defer></script>
 	<script charset="utf-8" src="./resources/js/script.js" defer></script>
 </head>
 <body>
@@ -12,28 +15,35 @@
 		<img src="./resources/svges/userIcon.svg" alt="user-icon" class = "user-icon">
 		<button class = "sign-button" type="button"></button>
 	</header>
-	<main>
+	<main class="main-page">
+		<div class = "left-container">
 		<div class = "filter">
 			<p class="filter-name">Filter</p>
 			<div class="filter-date">
 				<div class="from-container">
 					<p>From</p>
-					<input type="date">
+					<input class = "input-created-date" type="date">
+					<input type="checkbox" class="checkbox-from">
 				</div>
 				<div class = "to-container">
 					<p>To</p>
-					<input type="date">
+					<input class = "input-until-date" type="date">
+					<input type="checkbox" class="checkbox-to">
 				</div>
 			</div>
 			<div class="filter-tags">
 				<img src="./resources/svges/tags.svg" alt="tags">
 				<select name="tags" class="select-filter-tags">
 				</select>
+				<input type="checkbox" class="checkbox-tags">
 			</div>
 			<div class = "filter-vendor">
 				<select name="vendors" class="select-filter-vendor">
 				</select>
+				<input type="checkbox" class="checkbox-vendor">
 			</div>
+	 	</div>
+		<button class = "new-button">New ad</button>
 		</div>
 		<section class = "tape">
 			<template class = "ad-template">
@@ -60,7 +70,6 @@
 							<div class="comment">
 								<figure>
 									<img src="./resources/svges/userIcon.svg" alt="user-icon">
-									<figcaption>Dan</figcaption>
 								</figure>
 								<div class = "comment-text"></div>
 							</div>
@@ -77,7 +86,10 @@
 						<img src="./resources/svges/percent.svg" alt="percent">
 						<p class="percent"></p>
 					</div>
+					<div class="buttons">
 					<button class="edit">Edit</button>
+					<button class="delete">Delete</button>
+					</div>
 				</div>
 			</div>
 		</template>
